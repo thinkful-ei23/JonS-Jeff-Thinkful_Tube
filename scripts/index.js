@@ -1,6 +1,5 @@
 'use strict';
 
-
 const API_KEY = 'AIzaSyCHDtuZTezMXq5EnJTKdnlmiRQ0Ip9hdto';
 
 /*
@@ -21,14 +20,18 @@ const store = {
 
 // TASK: Add the Youtube Search API Base URL here:
 // Documentation is here: https://developers.google.com/youtube/v3/docs/search/list#usage
+
 const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
+
 
 // TASK:
 // 1. Create a `fetchVideos` function that receives a `searchTerm` and `callback`
 // 2. Use `searchTerm` to construct the right query object based on the Youtube API docs
 // 3. Make a getJSON call using the query object and sending the provided callback in as the last argument
 // TEST IT! Execute this function and console log the results inside the callback.
+
 const fetchVideos = function(searchTerm, callback) {
+  
   const query = {
     key: API_KEY,
     q: `${searchTerm}`,
@@ -36,6 +39,8 @@ const fetchVideos = function(searchTerm, callback) {
   };
   $.getJSON(BASE_URL, query, callback);
 };
+  
+
 
 
 // TASK:
@@ -62,7 +67,7 @@ const decorateResponse = function(response) {
 // TEST IT!
 const generateVideoItemHtml = function(video) {
   return `
-  <li data-video="${video.id}">
+  <li data-video-id="${video.id}">
   <h3>${video.title}</h3>
   <img src="${video.thumbnail}" />
   </li>
@@ -101,16 +106,29 @@ const render = function() {
 const handleFormSubmit = function() {
   $('form').submit(event => {
     event.preventDefault();
-    console.log('test');
-    const searchTitle = $('#search-term').val();
-    $('#seach-term').val('');
-    fetchVideos(searchTitle, (function() {
-      decorateResponse();  
-      addVideosToStore(decorateResponse());
+    const searchTitle = $(event.currentTarget).find('#search-term');
+    const searched = searchTitle.val();
+    searchTitle.val('');
+    fetchVideos(searchTitle, (function(response) {
+      addVideosToStore(decorateResponse(response));
       render();
     })); 
   });
 };
+
+
+/*const handleFormSubmit = function() { 
+  $('form').submit(event => { 
+    event.preventDefault(); 
+    console.log('test'); 
+    const searchTitle = $('#search-term').val(); 
+    $('#search-term').val(''); 
+    fetchVideos(searchTitle); 
+    generateVideoItemHtml(decorateResponse); 
+    render(); 
+  }); 
+};
+*/
 
 // When DOM is ready:
 $(function () {
