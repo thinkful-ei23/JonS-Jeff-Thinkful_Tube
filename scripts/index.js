@@ -32,6 +32,7 @@ const fetchVideos = function(searchTerm, callback) {
   const query = {
     key: API_KEY,
     q: `${searchTerm}`,
+    part: 'snippet',
   };
   $.getJSON(BASE_URL, query, callback);
 };
@@ -46,16 +47,15 @@ const fetchVideos = function(searchTerm, callback) {
 // TEST IT! Grab an example API response and send it into the function - make sure
 // you get back the object you want.
 const decorateResponse = function(response) {
-  return response.items.map((item) => {
+  return response.items.map(item => {
     return {
       id: item.id.videoId,
       title: item.snippet.title,
       thumbnail: item.snippet.thumbnails.default.url,
     };
   });
-}; 
-
-
+};
+ 
 // TASK:
 // 1. Create a `generateVideoItemHtml` function that receives the decorated object
 // 2. Using the object, return an HTML string containing all the expected data
@@ -102,11 +102,14 @@ const handleFormSubmit = function() {
   $('form').submit(event => {
     event.preventDefault();
     console.log('test');
-    const queryTarget = $(event.currentTarget).find('#search-term');
-    const query = queryTarget.val();
-    queryTarget.val('');
-    fetchVideos(query);
-  }); 
+    const searchTitle = $('#search-term').val();
+    $('#seach-term').val('');
+    fetchVideos(searchTitle, (function() {
+      decorateResponse();  
+      addVideosToStore(decorateResponse());
+      render();
+    })); 
+  });
 };
 
 // When DOM is ready:
