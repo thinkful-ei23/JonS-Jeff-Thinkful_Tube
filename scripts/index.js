@@ -109,7 +109,7 @@ const handleFormSubmit = function() {
     const searchTitle = $(event.currentTarget).find('#search-term');
     const searched = searchTitle.val();
     searchTitle.val('');
-    fetchVideos(searchTitle, (function(response) {
+    fetchVideos(searched, (function(response) {
       addVideosToStore(decorateResponse(response));
       render();
     })); 
