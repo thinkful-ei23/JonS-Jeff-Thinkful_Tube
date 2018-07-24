@@ -30,11 +30,12 @@ const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 // TEST IT! Execute this function and console log the results inside the callback.
 const fetchVideos = function(searchTerm, callback) {
   const query = {
+    key: API_KEY,
     q: `${searchTerm}`,
-    per_page: 5
-  }
+  };
   $.getJSON(BASE_URL, query, callback);
 };
+
 
 // TASK:
 // 1. Create a `decorateResponse` function that receives the Youtube API response
@@ -45,16 +46,27 @@ const fetchVideos = function(searchTerm, callback) {
 // TEST IT! Grab an example API response and send it into the function - make sure
 // you get back the object you want.
 const decorateResponse = function(response) {
-  const results = response.items.map((id, title) => render(id));
-  $('.results').html(results);
-};
+  return response.items.map((item) => {
+    return {
+      id: item.id.videoId,
+      title: item.snippet.title,
+      thumbnail: item.snippet.thumbnails.default.url,
+    };
+  });
+}; 
+
 
 // TASK:
 // 1. Create a `generateVideoItemHtml` function that receives the decorated object
 // 2. Using the object, return an HTML string containing all the expected data
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-
+  return `
+  <li data-video="${video.id}">
+  <h3>${video.title}</h3>
+  <img src="${video.thumbnail}" />
+  </li>
+  `;
 };
 
 // TASK:
@@ -62,7 +74,7 @@ const generateVideoItemHtml = function(video) {
 // objects and sets the array as the value held in store.videos
 // TEST IT!
 const addVideosToStore = function(videos) {
-
+  store.videos = videos;
 };
 
 // TASK:
@@ -71,7 +83,8 @@ const addVideosToStore = function(videos) {
 // 3. Add your array of DOM elements to the appropriate DOM element
 // TEST IT!
 const render = function() {
-
+  const html = store.videos.map(video => generateVideoItemHtml(video));
+  $('.results').html(html);
 };
 
 // TASK:
@@ -86,11 +99,19 @@ const render = function() {
 //   g) Inside the callback, run the `render` function 
 // TEST IT!
 const handleFormSubmit = function() {
-
+  $('form').submit(event => {
+    event.preventDefault();
+    console.log('test');
+    const queryTarget = $(event.currentTarget).find('#search-term');
+    const query = queryTarget.val();
+    queryTarget.val('');
+    fetchVideos(query);
+  }); 
 };
 
 // When DOM is ready:
 $(function () {
   // TASK:
   // 1. Run `handleFormSubmit` to bind the event listener to the DOM
+  handleFormSubmit();
 });
