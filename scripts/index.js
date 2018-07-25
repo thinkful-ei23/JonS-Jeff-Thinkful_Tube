@@ -1,6 +1,15 @@
 'use strict';
+/* global $ videoList */
 
-const API_KEY = 'AIzaSyCHDtuZTezMXq5EnJTKdnlmiRQ0Ip9hdto';
+$(function () {
+  videoList.bindEventListeners();
+});
+
+
+
+
+
+// const API_KEY = 'AIzaSyCHDtuZTezMXq5EnJTKdnlmiRQ0Ip9hdto';
 
 /*
   We want our store to hold a `videos` array of "decorated" objects - i.e. objects that
@@ -14,14 +23,14 @@ const API_KEY = 'AIzaSyCHDtuZTezMXq5EnJTKdnlmiRQ0Ip9hdto';
   }
 
 */
-const store = {
-  videos: []
-};
+// const store = {
+//   videos: []
+// };
 
 // TASK: Add the Youtube Search API Base URL here:
 // Documentation is here: https://developers.google.com/youtube/v3/docs/search/list#usage
 
-const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
+// const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 
 
 // TASK:
@@ -30,15 +39,15 @@ const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 // 3. Make a getJSON call using the query object and sending the provided callback in as the last argument
 // TEST IT! Execute this function and console log the results inside the callback.
 
-const fetchVideos = function(searchTerm, callback) {
+// const fetchVideos = function(searchTerm, callback) {
   
-  const query = {
-    key: API_KEY,
-    q: `${searchTerm}`,
-    part: 'snippet',
-  };
-  $.getJSON(BASE_URL, query, callback);
-};
+//   const query = {
+//     key: API_KEY,
+//     q: `${searchTerm}`,
+//     part: 'snippet',
+//   };
+//   $.getJSON(BASE_URL, query, callback);
+// };
   
 
 
@@ -51,46 +60,50 @@ const fetchVideos = function(searchTerm, callback) {
 // WILL have to dig into several nested properties!
 // TEST IT! Grab an example API response and send it into the function - make sure
 // you get back the object you want.
-const decorateResponse = function(response) {
-  return response.items.map(item => {
-    return {
-      id: item.id.videoId,
-      title: item.snippet.title,
-      thumbnail: item.snippet.thumbnails.default.url,
-    };
-  });
-};
+
+// const decorateResponse = function(response) {
+//   return response.items.map(item => {
+//     return {
+//       id: item.id.videoId,
+//       title: item.snippet.title,
+//       thumbnail: item.snippet.thumbnails.default.url,
+//     };
+//   });
+// };
  
 // TASK:
 // 1. Create a `generateVideoItemHtml` function that receives the decorated object
 // 2. Using the object, return an HTML string containing all the expected data
 // TEST IT!
-const generateVideoItemHtml = function(video) {
-  return `
-  <li data-video-id="${video.id}">
-  <h3>${video.title}</h3>
-  <img src="${video.thumbnail}" />
-  </li>
-  `;
-};
+
+// const generateVideoItemHtml = function(video) {
+//   return `
+//   <li data-video-id="${video.id}">
+//   <h3>${video.title}</h3>
+//   <img src="${video.thumbnail}" />
+//   </li>
+//   `;
+// };
 
 // TASK:
 // 1. Create a `addVideosToStore` function that receives an array of decorated video 
 // objects and sets the array as the value held in store.videos
 // TEST IT!
-const addVideosToStore = function(videos) {
-  store.videos = videos;
-};
+
+// const addVideosToStore = function(videos) {
+//   store.videos = videos;
+// };
 
 // TASK:
 // 1. Create a `render` function
 // 2. Map through `store.videos`, sending each `video` through your `generateVideoItemHtml`
 // 3. Add your array of DOM elements to the appropriate DOM element
 // TEST IT!
-const render = function() {
-  const html = store.videos.map(video => generateVideoItemHtml(video));
-  $('.results').html(html);
-};
+
+// const render = function() {
+//   const html = store.videos.map(video => generateVideoItemHtml(video));
+//   $('.results').html(html);
+// };
 
 // TASK:
 // 1. Create a `handleFormSubmit` function that adds an event listener to the form
@@ -103,36 +116,23 @@ const render = function() {
 //   f) Inside the callback, add the decorated response into your store using the `addVideosToStore` function
 //   g) Inside the callback, run the `render` function 
 // TEST IT!
-const handleFormSubmit = function() {
-  $('form').submit(event => {
-    event.preventDefault();
-    const searchTitle = $(event.currentTarget).find('#search-term');
-    const searched = searchTitle.val();
-    searchTitle.val('');
-    fetchVideos(searched, (function(response) {
-      addVideosToStore(decorateResponse(response));
-      render();
-    })); 
-  });
-};
 
-
-/*const handleFormSubmit = function() { 
-  $('form').submit(event => { 
-    event.preventDefault(); 
-    console.log('test'); 
-    const searchTitle = $('#search-term').val(); 
-    $('#search-term').val(''); 
-    fetchVideos(searchTitle); 
-    generateVideoItemHtml(decorateResponse); 
-    render(); 
-  }); 
-};
-*/
+// const handleFormSubmit = function() {
+//   $('form').submit(event => {
+//     event.preventDefault();
+//     const searchTitle = $(event.currentTarget).find('#search-term');
+//     const searched = searchTitle.val();
+//     searchTitle.val('');
+//     fetchVideos(searched, (function(response) {
+//       addVideosToStore(decorateResponse(response));
+//       render();
+//     })); 
+//   });
+// };
 
 // When DOM is ready:
-$(function () {
-  // TASK:
-  // 1. Run `handleFormSubmit` to bind the event listener to the DOM
-  handleFormSubmit();
-});
+// $(function () {
+//   // TASK:
+//   // 1. Run `handleFormSubmit` to bind the event listener to the DOM
+//   handleFormSubmit();
+// });
